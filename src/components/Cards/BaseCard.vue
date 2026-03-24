@@ -1,63 +1,98 @@
+<!-- BaseCard.vue -->
 <template>
-  <!-- Tarjeta -->
-  <router-link :to="ViewLink">
-    <div :class="[
-      CardBg,
-      'w-auto flex bg-senaColor border rounded-lg items-center gap-5 mx-10 lg:m-12 py-10 px-5 lg:p-5 shadow-md cursor-pointer transition-transform ease-in hover:scale-105 duration-800',
-      !CardImg ? 'justify-center text-center' : ''
-    ]">
-    <!-- Fondo de la imagen -->
-
-    <div v-if="CardImg" :class="[ImgBg,'p-2 border rounded-lg lg:w-2/4']">
-      <img :src="CardImg" alt="">
-    </div>
-    <!-- Texto de la tarjeta -->
-    <p
-      :class="[colorTextCard, !CardImg ? 'w-full' : '']"
-      class="text-robotoSlab font-semibold text-md lg:text-lg"
+  <router-link :to="viewLink" class="block h-full">
+    <div
+      class="group h-full flex flex-col items-center text-center px-5 pt-6 pb-5 rounded-2xl border bg-white transition-all duration-200 relative overflow-hidden cursor-pointer"
+      :class="`border-${colors.border} hover:border-${colors.accent}`"
     >
-      {{ cardText }}
-    </p>
-  </div>
+
+      <!-- Franja izquierda al hover -->
+      <div
+        class="absolute left-0 top-0 bottom-0 w-1 scale-y-0 group-hover:scale-y-100 transition-transform duration-200 origin-top rounded-r"
+        :class="`bg-${colors.accent}`"
+      />
+
+      <!-- Ícono -->
+      <div
+        class="w-14 h-14 rounded-2xl border flex items-center justify-center mb-4 flex-shrink-0"
+        :class="`bg-${colors.iconBg} border-${colors.iconBorder}`"
+      >
+        <img v-if="cardImg" :src="cardImg" :alt="cardTitle" class="w-7 h-7 object-contain"/>
+      </div>
+
+      <!-- Label -->
+      <p
+        class="text-[10px] font-semibold uppercase tracking-widest font-quicksand mb-1"
+        :class="`text-${colors.accent}`"
+      >
+        {{ cardLabel }}
+      </p>
+
+      <!-- Título -->
+      <h2 class="text-sm font-bold text-gray-800 font-robotoSlab mb-2 leading-snug">
+        {{ cardTitle }}
+      </h2>
+
+      <!-- Descripción -->
+      <p class="text-xs text-gray-500 font-quicksand leading-relaxed flex-1">
+        {{ cardText }}
+      </p>
+
+      <!-- Botón CTA — reemplaza solo este bloque -->
+      <div
+        class="mt-4 w-full py-2 rounded-xl border text-xs font-semibold font-quicksand transition-all duration-200 text-white"
+        :class="`border-${colors.accent} bg-${colors.accent}`"
+      >
+        {{ ctaText }} →
+      </div>
+
+    </div>
   </router-link>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-
-// Props del Componente y defaults
-const props = withDefaults(defineProps<{
-  cardText? : string,
-  CardBg? : 'white' | 'green',
-  CardImg? : string,
-  ViewLink? : string,
-}>(),
+const props = withDefaults(
+  defineProps<{
+    cardText?:  string
+    cardLabel?: string
+    cardTitle?: string
+    cardImg?:   string
+    viewLink?:  string
+    ctaText?:   string
+    variant?:   'green' | 'orange' | 'blue'
+  }>(),
   {
-    cardText : "Consulte acerca de los aprendices ingresados al CTA",
-    CardBg : 'white',
-    ViewLink : '/'
+    cardText:  'Descripción del módulo.',
+    cardLabel: 'Módulo',
+    cardTitle: 'Tarjeta',
+    viewLink:  '/',
+    ctaText:   'Ver más',
+    variant:   'green',
   }
 )
 
-// Logica para el prop CardBg y su valor de retorno
-const CardBg = computed(()=>{
-  if(props.CardBg == 'white') return 'bg-white'
-  else return 'bg-senaColor'
-})
+const colorMap = {
+  green:  {
+    accent:      'verdeSena',
+    border:      '[#daeeda]',
+    iconBg:      '[#f0f7f1]',
+    iconBorder:  '[#daeeda]',
+  },
+  orange: {
+    accent:      'orange-500',
+    border:      'orange-200',
+    iconBg:      'orange-50',
+    iconBorder:  'orange-200',
+  },
+  blue:   {
+    accent:      'blue-500',
+    border:      'blue-200',
+    iconBg:      'blue-50',
+    iconBorder:  'blue-200',
+  },
+}
 
-// Logica para el prop ImgBg y su valor de retorno
-const ImgBg = computed(()=>{
-  if(props.CardBg == 'white') return 'bg-senaColor'
-  else return 'bg-white'
-})
-
-// Logica para el prop colorTextCard y su valor de retorno, cambiando el color del texto de la carta
-const colorTextCard = computed(()=>{
-  if(props.CardBg == 'white') return 'text-black'
-  else return 'text-white'
-})
-
+const colors = computed(() => colorMap[props.variant])
 </script>
-<style>
-</style>

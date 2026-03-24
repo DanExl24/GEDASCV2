@@ -1,10 +1,11 @@
-<template>
-  <!-- Tabla de componente-->
-  <table class="p-2">
-    <slot>
 
-    </slot>
-  </table>
+  <!-- Tabla de componente-->
+<template>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm font-quicksand">
+      <slot/>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">

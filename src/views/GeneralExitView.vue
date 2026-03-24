@@ -1,119 +1,75 @@
 <template>
-  <div class="relative">
-    <!-- Header del componente-->
-    <HeaderView -header-title="SALIDA DE APRENDICES DEL CENTRO DE FORMACION"/>
-    <!-- Div para la mini navegacion-->
-    <div class="flex relative overflow-hidden justify-between">
-      <!-- Boton para salir -->
+  <div class="min-h-screen bg-[#f4f9f4] flex flex-col">
+
+    <HeaderView header-title="Salida de Aprendices del Centro de Formación"/>
+
+    <!-- Barra de navegación secundaria -->
+    <div class="w-full bg-white border-b border-[#daeeda] px-6 py-2.5 flex items-center justify-between">
       <ExitButton to="/"/>
-      <!-- Boton para abrir el modal -->
-      <BaseButtonOpen @click="open" :image="codebar" text="Escanear Aprendiz" class="text-white"/>
+      <BaseButtonOpen @click="open" :image="codebar" text="Escanear Aprendiz"/>
     </div>
 
-    <!-- Escaneo de codigo de barras -->
-      <BarcodeScanner ref="scannerModal" @aprendiz-detectado="detectAprendiz"/>
+    <BarcodeScanner ref="scannerModal" @aprendiz-detectado="detectAprendiz"/>
 
-      <!-- Div para insertar el apartado de aprendices-->
-    <div class="mx-20 my-3">
-      <section class="flex items-center justify-between mb-10">
-        <div class="flex items-center gap-2 w-4/5">
-          <!-- Buscar aprendices -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-6 py-6 flex flex-col gap-5">
+
+      <!-- Barra de búsqueda + botón manual -->
+      <div class="flex items-center gap-3">
+        <div class="flex-1">
           <SearchBar v-model="queryAprendices"/>
         </div>
-
-        <!--Boton de Ingreso manual  -->
-        <BaseButtonOpen @click="openManual" :image="add" text="Salida Manual" class="text-white"/>
-        <!--Modal de registro Manual  -->
-        <BaseModal ref="modalManual" title="Ingreso Manual">
+        <BaseButtonOpen @click="openManual" :image="add" text="Salida Manual"/>
+        <BaseModal ref="modalManual" title="Salida Manual">
           <BaseForm method="POST" :submit="submit">
-            <BaseField :input-event="EventoManual" v-model="formManual.documento" label="Documento de Identidad" place-holder="Documento de Identidad" type="text"/>
-            <BaseField v-model="formManual.nombre" label="Nombre del aprendiz" place-holder="Esperando Documento..." type="text" readonly/>
-            <BaseField v-model="formManual.apellido" label="Apellido del aprendiz" place-holder="Esperando Documento..." type="text" readonly/>
-            <BaseField v-model="formManual.formacion" label="Nombre de la Formacion" place-holder="Esperando Documento..." type="text" readonly/>
-            <!--Texto de alerta  -->
+            <BaseField :input-event="EventoManual" v-model="formManual.documento"
+              label="Documento de Identidad" place-holder="Ingresa el documento" type="text"/>
+            <BaseField v-model="formManual.nombre"
+              label="Nombre" place-holder="Esperando documento..." type="text" readonly/>
+            <BaseField v-model="formManual.apellido"
+              label="Apellido" place-holder="Esperando documento..." type="text" readonly/>
+            <BaseField v-model="formManual.formacion"
+              label="Formación" place-holder="Esperando documento..." type="text" readonly/>
             <BaseText :text="alerta.message" :type="alerta.type"/>
             <BaseButton text="Añadir Salida" type="submit"/>
           </BaseForm>
         </BaseModal>
+      </div>
 
-      </section>
-      <!-- tabla de aprendices-->
-      <BaseTable>
-        <!-- Columna de encabezado-->
-        <BaseColumn>
-          <BaseTableHead name="Nombre"/>
-          <BaseTableHead name="Apellido"/>
-          <BaseTableHead name="DNI"/>
-          <BaseTableHead name="Nombre de la Formacion"/>
-          <BaseTableHead name="Hora de Salida"/>
-          <BaseTableHead name="Salida de Maquinas"/>
-        </BaseColumn>
-        <!--Registros -->
-        <BaseColumn v-for="(aprendiz) in aprendizData" :key="aprendiz.id_aprendiz">
-          <td>{{ aprendiz.nombre }}</td>
-          <td>{{ aprendiz.apellido }}</td>
-          <td>{{ aprendiz.documento }}</td>
-          <td>{{ aprendiz.formacion }}</td>
-          <td>{{ aprendiz.hora_salida }}</td>
-          <td>
-            <BaseButtonOpen
-              v-if="aprendiz.id_detallemaquina"
-              text="Ver Detalle"
-              class-button="m-auto my-0 py-0 px-0 bg-transparent border-none text-center font-semibold !text-senaColor"
-              @click="openDetalleMaquina(aprendiz.id_aprendiz)"
-            />
-
-            <BaseText
-              v-else
-              text="Sin registro"
-              type="error"
-              class="font-semibold"
-            />
-          </td>
-        </BaseColumn>
-      </BaseTable>
-        <!-- Modal para ver los detalles de las maquinas-->
-        <BaseModal ref="modalDetalleMaquina" title="Máquinas Registradas">
-
-          <div class="flex flex-col gap-6">
-
-            <!-- COMPUTADOR -->
-            <div v-if="maquinaDetalle.pc" class="border rounded-lg p-4">
-
-              <h3 class="font-bold font-robotoSlab text-lg mb-2">Computador</h3>
-
-              <BaseText type="success" :text="`Marca: ${maquinaDetalle.pc.modelo}`"/>
-              <BaseText type="success" :text="`Serial: ${maquinaDetalle.pc.placa_serial}`"/>
-
-            </div>
-
-            <!-- VEHICULO -->
-            <div v-if="maquinaDetalle.vh" class="border rounded-lg p-4">
-
-              <h3 class="font-bold font-robotoSlab text-lg mb-2">Vehículo</h3>
-
-              <BaseText type="success" :text="`Tipo: ${maquinaDetalle.vh.tipo_vehiculo}`"/>
-              <BaseText type="success" :text="`Marca: ${maquinaDetalle.vh.modelo}`"/>
-              <BaseText type="success" :text="`Placa: ${maquinaDetalle.vh.placa_serial}`"/>
-
-            </div>
-
-            <!-- FIRMA -->
-            <div v-if="maquinaDetalle.firma">
-
-              <h3 class="font-semibold mb-2">Firma del aprendiz</h3>
-
-              <img
-                :src="maquinaDetalle.firma"
-                class="border rounded-lg w-48"
-              />
-
-            </div>
-
+      <!-- Tabla -->
+      <div class="bg-white rounded-2xl border border-[#daeeda] overflow-hidden">
+        <div class="px-5 py-4 border-b border-[#daeeda] flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-widest text-orange-500 mb-0.5">
+              Registro del día
+            </p>
+            <h2 class="text-sm font-bold text-[#1a2e1a] font-robotoSlab">
+              Aprendices con salida
+            </h2>
           </div>
+          <span class="bg-orange-50 text-orange-600 text-xs font-semibold px-3 py-1 rounded-full border border-orange-200">
+            {{ aprendizData.length }} registros
+          </span>
+        </div>
 
-        </BaseModal>
-    </div>
+        <BaseTable>
+          <BaseColumn>
+            <BaseTableHead name="Nombre"/>
+            <BaseTableHead name="Apellido"/>
+            <BaseTableHead name="DNI"/>
+            <BaseTableHead name="Formación"/>
+            <BaseTableHead name="Hora de Salida"/>
+          </BaseColumn>
+          <BaseColumn v-for="aprendiz in aprendizData" :key="aprendiz.id_aprendiz">
+            <td>{{ aprendiz.nombre }}</td>
+            <td>{{ aprendiz.apellido }}</td>
+            <td>{{ aprendiz.documento }}</td>
+            <td>{{ aprendiz.formacion }}</td>
+            <td>{{ aprendiz.hora_salida }}</td>
+          </BaseColumn>
+        </BaseTable>
+      </div>
+
+    </main>
   </div>
 </template>
 <script setup lang="ts">
@@ -164,11 +120,7 @@ const scannerModal = ref<InstanceType<typeof BarcodeScanner> | null>(null)
 const aprendizData = ref<Aprendiz[]>([])
 const modalManual = ref()
 const queryAprendices = ref('')
-const modalDetalleMaquina = ref()
-const maquinaDetalle = ref<DetalleMaquinas>({
-  pc: null,
-  vh: null
-})
+
 // -- Alerta de formulario manual -- //
 const alerta = ref({message: '', type: 'error' as 'error' | 'success'})
 
@@ -203,28 +155,6 @@ export interface Aprendiz {
 }
 
 
-// Interfaz para computadores
-interface Computador {
-  modelo: string
-  placa_serial: string
-  firma: string
-}
-
-
-// Interfaz para vehiculos
-interface Vehiculo {
-  tipo_vehiculo: string
-  modelo: string
-  placa_serial: string
-  firma: string
-}
-
-// Interfaz para detalle de
-interface DetalleMaquinas {
-  pc: Computador | null
-  vh: Vehiculo | null
-  firma?: string
-}
 
 
 
@@ -315,28 +245,7 @@ const HistorialSalidas = async () => {
   }
 }
 
-// Consultar maquinas de los aprendices
-const openDetalleMaquina = async (id_aprendiz:number) => {
 
-  try{
-
-    const response = await fetch(`${API}/api/registroIngresos/detalleMaquinas/${id_aprendiz}`)
-    const data = await response.json()
-
-    if(!response.ok){
-      console.error(data.message)
-      return
-    }
-
-    maquinaDetalle.value = data.result
-
-    modalDetalleMaquina.value.openModal()
-
-  }catch(error){
-    console.error(error)
-  }
-
-}
 
 // =======================================================
 // ON MOUNTED (Se ejecuta al montar el DOM)

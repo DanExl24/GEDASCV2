@@ -1,5 +1,12 @@
 <template>
-  <p v-if="active = true" :class="[ClaseDinamica,'font-quicksand']">{{ text }}</p>
+  <p v-if="text" :class="[ClaseDinamica,
+    'text-xs font-quicksand font-medium px-3 py-2 rounded-lg border',
+    type === 'success' ? 'bg-[#f0f7f1] text-verdeSena border-[#daeeda]' :
+    type === 'error'   ? 'bg-red-50 text-red-600 border-red-200' :
+                         'bg-yellow-50 text-yellow-700 border-yellow-200'
+  ]">
+    {{ text }}
+  </p>
 </template>
 <script setup lang="ts">
 import { computed,ref } from 'vue';

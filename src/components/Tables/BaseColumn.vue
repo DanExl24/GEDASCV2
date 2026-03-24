@@ -1,7 +1,12 @@
 <template>
-  <!--Columnas de la tabla -->
-  <tr class="border-collapse text-center border border-black">
-    <slot></slot>
+  <tr
+    class="border-b border-[#daeeda] transition-colors duration-100
+           odd:bg-white even:bg-[#f4f9f4]
+           hover:bg-[#e8f5e8]
+           [&>td]:px-5 [&>td]:py-3 [&>td]:text-[#1a2e1a] [&>td]:text-sm
+           [&>td]:font-quicksand [&>td]:whitespace-nowrap"
+  >
+    <slot/>
   </tr>
 </template>
 
@@ -10,8 +15,4 @@
 </script>
 
 <style>
-tr td{
-  border: solid black 1px;
-  padding: 0.5rem 0 0.5rem 0;
-}
 </style>

@@ -1,9 +1,11 @@
 <template>
-  <!-- Componente tipo ruta para manejar las vistas -->
   <router-link :to="to">
-      <div class="bg-senaColor p-3 m-3 mb-14 w-12 border rounded-md hover:scale-110 transition-transform duration-800">
-        <img class="" :src="ButtonImg" alt="">
-      </div>
+    <button class="flex items-center gap-2 text-[#5a7a5a] hover:text-verdeSena text-sm font-semibold font-quicksand transition-colors duration-150 group">
+      <span class="w-7 h-7 rounded-lg bg-[#f0f7f1] border border-[#daeeda] flex items-center justify-center group-hover:border-verdeSena transition-colors duration-150">
+        ←
+      </span>
+      Volver
+    </button>
   </router-link>
 </template>
 

@@ -1,15 +1,20 @@
 <template>
-  <div class="flex flex-col">
-    <label class="mt-2 font-robotoSlab">{{ label }}</label>
-
+  <div class="flex flex-col gap-1.5">
+    <label class="text-[11px] font-semibold uppercase tracking-wider text-[#5a7a5a] font-quicksand">
+      {{ label }}
+    </label>
     <input
       :value="modelValue"
-      :readonly="readonly"
       :type="type"
       :placeholder="placeHolder"
+      :readonly="readonly"
       @input="handleInput"
-      class="border border-gray-400 focus:outline-none rounded-lg p-2 py-2.5 font-quicksand"
-      :maxlength="maxLength"
+      :class="[
+        'w-full px-3 py-2.5 text-sm font-quicksand rounded-xl border transition-all duration-150 focus:outline-none',
+        readonly
+          ? 'bg-[#f8fbf8] border-[#daeeda] text-[#6b8a6b] cursor-not-allowed'
+          : 'bg-white border-[#daeeda] text-[#1a2e1a] focus:border-verdeSena focus:ring-2 focus:ring-verdeSena/20'
+      ]"
     />
   </div>
 </template>

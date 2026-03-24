@@ -1,34 +1,25 @@
 <template>
-  <div class="relative">
+  <div class="min-h-screen bg-[#f4f9f4] flex flex-col">
 
-    <!-- ================= HEADER ================= -->
-    <HeaderView -header-title="REGISTRO HISTORICO DE INGRESO Y SALIDA DE APRENDICES"/>
+    <HeaderView header-title="Registro Histórico de Ingreso y Salida de Aprendices"/>
 
-    <!-- ================= NAVEGACIÓN ================= -->
-    <div class="flex relative overflow-hidden justify-between">
+    <div class="w-full bg-white border-b border-[#daeeda] px-6 py-2.5 flex items-center justify-between">
       <ExitButton to="/"/>
     </div>
 
-    <!-- ================= FILTROS ================= -->
-    <div class="mx-20 my-10 flex justify-between items-center">
+    <main class="flex-1 w-full px-8 py-6 flex flex-col gap-5">
 
-      <!-- 🔍 BUSCADOR -->
-      <div class="w-4/5">
-        <SearchBar v-model="queryAprendices"/>
-      </div>
-
-      <!-- 🎯 SELECTORES DE FILTRO -->
-      <div class="flex gap-4">
-
-        <!-- Filtro por programa -->
+      <!-- Filtros -->
+      <div class="flex items-center gap-3">
+        <div class="flex-1">
+          <SearchBar v-model="queryAprendices"/>
+        </div>
         <BaseSelect
           struct="green"
-          placeholder="Programa de Formacion"
+          placeholder="Programa de Formación"
           v-model:model-value="filters.Program"
           :options="optionsProgram"
         />
-
-        <!-- Filtro por fecha -->
         <BaseSelect
           struct="green"
           placeholder="Fecha"
@@ -36,95 +27,56 @@
           :options="optionsDates"
         />
       </div>
-    </div>
 
-    <!-- ================= TABLA ================= -->
-    <div class="mx-20">
+      <!-- Tabla -->
+      <div class="bg-white rounded-2xl border border-[#daeeda] overflow-hidden w-full">
 
-      <BaseTable>
-
-        <!-- 🧾 CABECERA -->
-        <BaseColumn>
-          <BaseTableHead name="Nombre"/>
-          <BaseTableHead name="Apellido"/>
-          <BaseTableHead name="DNI"/>
-          <BaseTableHead name="Formación"/>
-          <BaseTableHead name="Ingreso"/>
-          <BaseTableHead name="Salida"/>
-          <BaseTableHead name="Máquina"/>
-        </BaseColumn>
-
-        <!-- 📊 FILAS DINÁMICAS -->
-        <BaseColumn
-          v-for="aprendiz in historial"
-          :key="aprendiz.id_ingreso"
-        >
-          <td>{{ aprendiz.nombre }}</td>
-          <td>{{ aprendiz.apellido }}</td>
-          <td>{{ aprendiz.documento }}</td>
-          <td>{{ aprendiz.formacion }}</td>
-
-          <!-- Manejo de valores nulos -->
-          <td>{{ aprendiz.hora_ingreso || '—' }}</td>
-          <td>{{ aprendiz.hora_salida || '—' }}</td>
-
-          <!-- Estado de máquina -->
-          <td>
-            <BaseText
-              v-if="aprendiz.id_detallemaquina == null"
-              text="No registrada"
-              type="error"
-              class="font-semibold"
-            />
-
-            <BaseButtonOpen
-              v-else
-              text="Maquina Registrada"
-              class-button="m-auto my-0 py-0 px-0 bg-transparent border-none text-center font-semibold !text-senaColor"
-              @click="openDetalleMaquina(aprendiz.id_detallemaquina)"
-            />
-          </td>
-
-        </BaseColumn>
-      </BaseTable>
-    </div>
-
-    <!-- ================= MODAL DETALLE MÁQUINAS ================= -->
-    <BaseModal ref="modalDetalleMaquina" title="Máquinas Registradas">
-
-      <div class="flex flex-col gap-6">
-
-        <!-- 💻 COMPUTADOR -->
-        <div v-if="maquinaDetalle.pc" class="border rounded-lg p-4">
-          <h3 class="font-bold font-robotoSlab text-lg mb-2">Computador</h3>
-
-          <BaseText type="success" :text="`Marca: ${maquinaDetalle.pc.modelo}`"/>
-          <BaseText type="success" :text="`Serial: ${maquinaDetalle.pc.placa_serial}`"/>
+        <div class="px-5 py-4 border-b border-[#daeeda] flex items-center justify-between">
+          <div>
+            <p class="text-[11px] font-semibold uppercase tracking-widest text-blue-500 mb-0.5">
+              Historial completo
+            </p>
+            <h2 class="text-sm font-bold text-[#1a2e1a] font-robotoSlab">
+              Registro de ingresos y salidas
+            </h2>
+          </div>
+          <span class="bg-blue-50 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full border border-blue-200">
+            {{ historial.length }} registros
+          </span>
         </div>
 
-        <!-- 🚗 VEHÍCULO -->
-        <div v-if="maquinaDetalle.vh" class="border rounded-lg p-4">
-          <h3 class="font-bold font-robotoSlab text-lg mb-2">Vehículo</h3>
-
-          <BaseText type="success" :text="`Tipo: ${maquinaDetalle.vh.tipo_vehiculo}`"/>
-          <BaseText type="success" :text="`Marca: ${maquinaDetalle.vh.modelo}`"/>
-          <BaseText type="success" :text="`Placa: ${maquinaDetalle.vh.placa_serial}`"/>
-        </div>
-
-        <!-- ✍️ FIRMA -->
-        <div v-if="maquinaDetalle.firma">
-          <h3 class="font-semibold mb-2">Firma del aprendiz</h3>
-
-          <img
-            :src="maquinaDetalle.firma"
-            class="border rounded-lg w-48"
-          />
+        <div class="overflow-x-auto">
+          <BaseTable>
+            <BaseColumn>
+              <BaseTableHead name="Nombre"/>
+              <BaseTableHead name="Apellido"/>
+              <BaseTableHead name="DNI"/>
+              <BaseTableHead name="Formación"/>
+              <BaseTableHead name="Ingreso"/>
+              <BaseTableHead name="Salida"/>
+            </BaseColumn>
+            <BaseColumn v-for="aprendiz in historial" :key="aprendiz.id_ingreso">
+              <td>{{ aprendiz.nombre }}</td>
+              <td>{{ aprendiz.apellido }}</td>
+              <td>{{ aprendiz.documento }}</td>
+              <td>{{ aprendiz.formacion }}</td>
+              <td>{{ aprendiz.hora_ingreso || '—' }}</td>
+              <td>
+                <span
+                  class="text-xs font-semibold px-2.5 py-1 rounded-full"
+                  :class="aprendiz.hora_salida
+                    ? 'bg-orange-50 text-orange-600 border border-orange-200'
+                    : 'bg-[#f0f7f1] text-verdeSena border border-[#daeeda]'"
+                >
+                  {{ aprendiz.hora_salida || 'En CTA' }}
+                </span>
+              </td>
+            </BaseColumn>
+          </BaseTable>
         </div>
 
       </div>
-
-    </BaseModal>
-
+    </main>
   </div>
 </template>
 <script setup lang="ts">
@@ -137,9 +89,6 @@ import HeaderView from '@/layouts/HeaderView.vue'
 import BaseTable from '@/components/Tables/BaseTable.vue'
 import BaseColumn from '@/components/Tables/BaseColumn.vue'
 import BaseTableHead from '@/components/Tables/BaseTableHead.vue'
-import BaseText from '@/components/Text/BaseText.vue'
-import BaseButtonOpen from '@/components/Buttons/BaseButtonOpen.vue'
-import BaseModal from '@/components/Modals/BaseModal.vue'
 import ExitButton from '@/components/UI/ExitButton.vue'
 import SearchBar from '@/components/UI/SearchBar.vue'
 import BaseSelect from '@/components/Forms/BaseSelect.vue'
@@ -158,17 +107,10 @@ const API = import.meta.env.VITE_API_URL
 // Lista principal del historial
 const historial = ref<HistorialAprendiz[]>([])
 
-// Modal de detalle
-const modalDetalleMaquina = ref()
 
 // Buscador
 const queryAprendices = ref()
 
-// Detalle de máquina seleccionada
-const maquinaDetalle = ref<DetalleMaquinas>({
-  pc: null,
-  vh: null
-})
 
 // Filtros activos
 const filters = reactive({
@@ -192,22 +134,7 @@ interface HistorialAprendiz {
   id_detallemaquina: number | null
 }
 
-interface Computador {
-  modelo: string
-  placa_serial: string
-}
 
-interface Vehiculo {
-  tipo_vehiculo: string
-  modelo: string
-  placa_serial: string
-}
-
-interface DetalleMaquinas {
-  pc: Computador | null
-  vh: Vehiculo | null
-  firma?: string
-}
 
 
 
@@ -253,28 +180,6 @@ const getHistorialByFilters = async () => {
   }
 }
 
-
-// 🔍 Obtener detalle de máquinas de un aprendiz
-const openDetalleMaquina = async (id_detallemaquina: number) => {
-  try {
-    const response = await fetch(`${API}/api/historico/historialMaquinas/${id_detallemaquina}`)
-    const data = await response.json()
-
-    if (!response.ok) {
-      console.error(data.message)
-      return
-    }
-
-    // Guardar resultado en el estado
-    maquinaDetalle.value = data.result
-
-    // Abrir modal
-    modalDetalleMaquina.value.openModal()
-
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 
 

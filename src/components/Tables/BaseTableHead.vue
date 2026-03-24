@@ -1,6 +1,7 @@
 <template>
-  <!--Encabezado de la tabla -->
-  <th class="border-collapse font-quicksand font-medium text-center border border-black bg-senaColor text-white">{{ name }}</th>
+  <th class="px-5 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[#6b8a6b] bg-[#f8fbf8] border-b border-[#daeeda] whitespace-nowrap">
+    {{ name }}
+  </th>
 </template>
 
 <script setup lang="ts">

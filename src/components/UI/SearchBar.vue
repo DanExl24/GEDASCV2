@@ -1,12 +1,16 @@
 <template>
+  <div class="relative w-full">
+    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b8a6b] text-sm pointer-events-none">
+      🔍
+    </span>
     <input
       :value="modelValue"
-      :placeholder="placeholder"
-      :readonly="readonly"
-      :type="type"
       @input="handleInput"
-       class="w-2/4 border  border-gray-500 rounded-lg bg-white font-quicksand p-2 focus:outline-none"
+      type="text"
+      placeholder="Buscar aprendiz por nombre, DNI o formación..."
+      class="w-full pl-9 pr-4 py-2.5 text-sm font-quicksand bg-white border border-[#daeeda] rounded-xl text-[#1a2e1a] placeholder:text-[#9ab89a] focus:outline-none focus:border-verdeSena focus:ring-2 focus:ring-verdeSena/20 transition-all duration-150"
     />
+  </div>
 </template>
 
 <script setup lang="ts">
