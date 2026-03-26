@@ -9,7 +9,7 @@
       <div class="flex flex-col leading-none gap-0.5">
         <span class="text-white font-bold text-base font-robotoSlab">SENA</span>
         <span class="text-white/80 text-[11px] font-quicksand hidden sm:block">
-          Centro de Tecnología y Automatización · CTA
+          Centro Tecnológico de la Amazonía · CTA
         </span>
       </div>
     </div>

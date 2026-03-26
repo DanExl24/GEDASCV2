@@ -10,20 +10,13 @@ export default defineConfig({
     vueDevTools(),
     basicSsl()
   ],
-
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-
   server: {
     host: true,
-    port: 5173,
-
-    hmr: {
-      protocol: 'wss',
-      host: '10.9.50.18'
-    }
+    port: 5173
   }
 })

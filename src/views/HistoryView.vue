@@ -68,7 +68,7 @@
                     ? 'bg-orange-50 text-orange-600 border border-orange-200'
                     : 'bg-[#f0f7f1] text-verdeSena border border-[#daeeda]'"
                 >
-                  {{ aprendiz.hora_salida || 'En CTA' }}
+                  {{ aprendiz.hora_salida || 'No salio' }}
                 </span>
               </td>
             </BaseColumn>

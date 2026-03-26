@@ -1,8 +1,17 @@
 const API = import.meta.env.VITE_API_URL
 
-export const getEstadisticas = async () => {
+export type stat = {
+  label : string,
+  value: number,
+  icon : string,
+  trend: string,
+  trendColor? : string,
+  valueColor?: string
+}
+
+export const getEstadisticas = async () : Promise<stat[]> => {
   try {
-    const response = await fetch(`${API}/api/estadisticas/dashboard`)
+    const response = await fetch(`${API}/api/estadisticas/historial`)
 
     if (!response.ok) {
       throw new Error('Error al obtener estadísticas')
@@ -23,7 +32,8 @@ export const getEstadisticas = async () => {
         value: data.salidasHoy,
         icon: '↑',
         trend: '↓ vs ayer',
-        trendColor: 'text-orange-500'
+        trendColor: 'text-orange-500',
+        valueColor: 'text-orange-700'
       },
       {
         label: 'Este Mes',
