@@ -134,13 +134,13 @@
                 <p class="text-xs font-semibold">{{ item.nombre }}</p>
 
                 <!-- Tiempo dinámico -->
-                <p v-if="item.tiempo == 0">Justo Ahora</p>
-                <p v-else>Hace {{ item.tiempo }} Min</p>
+                <p v-if="item.tiempo == 0" class="text-[11px] text-[#6b8a6b]">Justo Ahora</p>
+                <p v-else class="text-[11px] text-[#6b8a6b]">Hace {{ item.tiempo }} Min</p>
               </div>
 
               <!-- Badge tipo -->
               <span
-                :class="item.tipo === 'entrada'
+                class="text-[10px] font-semibold px-2 py-1 rounded-full" :class="item.tipo === 'entrada'
                   ? 'bg-[#f0f7f1] text-[#27500a]'
                   : 'bg-orange-50 text-orange-700'">
                 {{ item.tipo === 'entrada' ? 'Entrada' : 'Salida' }}
